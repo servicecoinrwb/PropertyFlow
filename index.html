@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PropertyFlow Bond Token Dashboard</title>
+    <title>PropertyFlow 25 Token Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -123,7 +123,7 @@
     <div id="app" class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         <!-- Header -->
         <header class="flex flex-col sm:flex-row justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4 sm:mb-0">PropertyFlow Bond Token Dashboard</h1>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4 sm:mb-0">PropertyFlow 25 Token Dashboard</h1>
             <button id="connectButton" class="btn btn-primary">Connect Wallet</button>
         </header>
 
@@ -162,8 +162,8 @@
                         <div class="info-item"><div class="title">Total Supply</div><div class="value" id="totalSupply">--</div></div>
                         <div class="info-item"><div class="title">Maturity</div><div class="value" id="maturityDate">--</div></div>
                         <div class="info-item"><div class="title">Purchase Price (USDC)</div><div class="value" id="purchasePrice">--</div></div>
-                        <div class="info-item"><div class="title">Redeem Rate</div><div class="value" id="redeemRate">--</div></div>
-                        <div class="info-item"><div class="title">Early Redeem Rate</div><div class="value" id="earlyRedeemRate">--</div></div>
+                        <div class="info-item"><div class="title" id="redeemRateLabel">Maturity Payout Rate</div><div class="value" id="redeemRate">--</div></div>
+                        <div class="info-item"><div class="title" id="earlyRedeemRateLabel">Early Payout Rate</div><div class="value" id="earlyRedeemRate">--</div></div>
                         <div class="info-item"><div class="title">Contract Owner</div><div class="value truncate" id="contractOwner">--</div></div>
                     </div>
                 </div>
@@ -336,10 +336,14 @@
             document.getElementById('purchasePrice').textContent = `${ethers.utils.formatUnits(purchasePrice, 6)} USDC`;
             
             // Correctly format the percentage rates
-            const formattedRedeemRate = redeemRate.toNumber() / 1000000;
-            const formattedEarlyRedeemRate = earlyRedeemRate.toNumber() / 1000000;
+            // Assuming the contract stores 120% as 12000000
+            const formattedRedeemRate = redeemRate.toNumber() / 100000;
+            const formattedEarlyRedeemRate = earlyRedeemRate.toNumber() / 100000;
             document.getElementById('redeemRate').textContent = `${formattedRedeemRate}%`;
             document.getElementById('earlyRedeemRate').textContent = `${formattedEarlyRedeemRate}%`;
+            document.getElementById('redeemRateLabel').textContent = 'Maturity Payout Rate';
+            document.getElementById('earlyRedeemRateLabel').textContent = 'Early Payout Rate';
+
 
             document.getElementById('contractOwner').textContent = owner;
             
