@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Property Flow Bond Token Dashboard</title>
+    <title>PropertyFlow Bond Token Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -126,6 +126,13 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-4 sm:mb-0">PropertyFlow Bond Token Dashboard</h1>
             <button id="connectButton" class="btn btn-primary">Connect Wallet</button>
         </header>
+
+        <!-- Description Card -->
+        <div class="card bg-indigo-50 border-indigo-200 mb-8">
+            <p class="text-center text-indigo-800">
+                Buy PFLOW25 for $10 and earn $12 after 12 months. Available for a limited time — cutoff at 9 months. Early redemption allowed after 45 days at a reduced rate. Fractional purchases supported.
+            </p>
+        </div>
 
         <!-- Main Content -->
         <main id="mainContent" class="hidden">
@@ -326,10 +333,14 @@
             const maturityDate = new Date(maturity.toNumber() * 1000);
             document.getElementById('maturityDate').textContent = maturityDate.toLocaleString();
             
-            // Assuming USDC has 6 decimals, prices/rates might be scaled by 1e6
             document.getElementById('purchasePrice').textContent = `${ethers.utils.formatUnits(purchasePrice, 6)} USDC`;
-            document.getElementById('redeemRate').textContent = `${redeemRate.toString()}%`;
-            document.getElementById('earlyRedeemRate').textContent = `${earlyRedeemRate.toString()}%`;
+            
+            // Correctly format the percentage rates
+            const formattedRedeemRate = redeemRate.toNumber() / 1000000;
+            const formattedEarlyRedeemRate = earlyRedeemRate.toNumber() / 1000000;
+            document.getElementById('redeemRate').textContent = `${formattedRedeemRate}%`;
+            document.getElementById('earlyRedeemRate').textContent = `${formattedEarlyRedeemRate}%`;
+
             document.getElementById('contractOwner').textContent = owner;
             
             await updateUserInfo();
