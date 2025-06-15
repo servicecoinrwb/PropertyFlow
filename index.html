@@ -459,15 +459,11 @@
             const redeemRateBN = redeemRate;
             const earlyRedeemRateBN = earlyRedeemRate;
             
-            // Divisor logic for rates. This handles rates stored as percentages with precision.
-            // e.g., 120% is stored as 120 * 10^18. We divide by 100 * 10^18.
             const rateDivisor = ethers.BigNumber.from('10').pow(18).mul(100);
 
-            // Calculate payouts using BigNumber math to prevent overflow
             const maturityPayoutBN = purchasePriceBN.mul(redeemRateBN).div(rateDivisor);
             const earlyPayoutBN = purchasePriceBN.mul(earlyRedeemRateBN).div(rateDivisor);
             
-            // Format the final results for display
             const formattedPrice = parseFloat(ethers.utils.formatUnits(purchasePriceBN, currencyDecimals)).toFixed(2);
             const formattedMaturityPayout = parseFloat(ethers.utils.formatUnits(maturityPayoutBN, currencyDecimals)).toFixed(2);
             const formattedEarlyPayout = parseFloat(ethers.utils.formatUnits(earlyPayoutBN, currencyDecimals)).toFixed(2);
@@ -634,4 +630,4 @@
     });
 </script>
 </body>
-</html>
+</ht
