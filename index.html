@@ -452,18 +452,28 @@
             document.getElementById('maturityDate').textContent = new Date(maturity.toNumber() * 1000).toLocaleString();
             
             const currencyDecimals = await currencyContract.decimals();
-            const purchasePriceFloat = parseFloat(ethers.utils.formatUnits(purchasePrice, currencyDecimals));
-            document.getElementById('purchasePrice').textContent = `${purchasePriceFloat} ${currencySymbol}`;
+            document.getElementById('purchasePrice').textContent = `${ethers.utils.formatUnits(purchasePrice, currencyDecimals)} ${currencySymbol}`;
+
+            // --- CORRECTED BIG NUMBER MATH ---
+            // Keep all values as BigNumber for calculations
+            const purchasePriceBN = purchasePrice;
+            const redeemRateBN = redeemRate;
+            const earlyRedeemRateBN = earlyRedeemRate;
             
-            const redeemRatePercent = redeemRate.toNumber() / 100000;
-            const earlyRedeemRatePercent = earlyRedeemRate.toNumber() / 100000;
-            const maturityPayout = (purchasePriceFloat * redeemRatePercent / 100).toFixed(2);
-            const earlyPayout = (purchasePriceFloat * earlyRedeemRatePercent / 100).toFixed(2);
-            
-            document.getElementById('redeemRate').textContent = `${maturityPayout} ${currencySymbol}`;
-            document.getElementById('earlyRedeemRate').textContent = `${earlyPayout} ${currencySymbol}`;
+            // Divisor for rate (100 * 10^18 = 10^20)
+            const rateDivisor = ethers.BigNumber.from('100000000000000000000');
+
+            // Calculate payouts using BigNumber math to prevent overflow
+            const maturityPayoutBN = purchasePriceBN.mul(redeemRateBN).div(rateDivisor);
+            const earlyPayoutBN = purchasePriceBN.mul(earlyRedeemRateBN).div(rateDivisor);
+
+            // Format the final results for display
+            document.getElementById('redeemRate').textContent = `${ethers.utils.formatUnits(maturityPayoutBN, currencyDecimals)} ${currencySymbol}`;
+            document.getElementById('earlyRedeemRate').textContent = `${ethers.utils.formatUnits(earlyPayoutBN, currencyDecimals)} ${currencySymbol}`;
             document.getElementById('redeemRateLabel').textContent = 'Maturity Payout';
             document.getElementById('earlyRedeemRateLabel').textContent = 'Early Payout';
+            // --- END CORRECTION ---
+
             document.getElementById('contractOwner').textContent = owner;
             
             await updateUserInfo();
